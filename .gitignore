@@ -1,0 +1,29 @@
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de configuração do ambiente
+/config/database.php
+
+# Arquivos de dependências e cache
+/vendor/
+/node_modules/
+*.log
+*.cache
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*~
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos de ambiente
+.env
+.env.*
+!.env.example 
