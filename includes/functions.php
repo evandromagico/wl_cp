@@ -64,12 +64,15 @@ function calcularPorcentagem($concluidos, $total)
     return round(($concluidos / $total) * 100);
 }
 
-// Função para gerar cor baseada no status
+// Função para gerar cor e texto baseados no status
 function getStatusColor($data_entrega, $progresso_total = 0)
 {
-    // Se o progresso total for 100%, retorna azul independente do prazo
+    // Se o progresso total for 100%, retorna azul e "Concluído"
     if ($progresso_total >= 100) {
-        return 'primary'; // Azul
+        return [
+            'color' => 'primary', // Azul
+            'text' => 'Concluído'
+        ];
     }
 
     // Converter as datas para timestamp (meia-noite)
@@ -78,7 +81,11 @@ function getStatusColor($data_entrega, $progresso_total = 0)
 
     // Se a data atual é depois da data de entrega
     if ($data_atual > $data_entrega) {
-        return 'danger'; // Vermelho para atrasado
+        $dias = floor(($data_atual - $data_entrega) / (60 * 60 * 24));
+        return [
+            'color' => 'danger', // Vermelho para atrasado
+            'text' => "Atrasado {$dias} dias"
+        ];
     }
 
     // Calcular dias restantes
@@ -86,14 +93,23 @@ function getStatusColor($data_entrega, $progresso_total = 0)
 
     // Se faltam mais de 3 dias
     if ($dias_restantes > 3) {
-        return 'success'; // Verde
+        return [
+            'color' => 'success', // Verde
+            'text' => 'Em dia'
+        ];
     }
 
     // Se faltam 3 dias ou menos (incluindo mesmo dia)
     if ($progresso_total < 90) {
-        return 'warning text-dark'; // Laranja
+        return [
+            'color' => 'warning text-dark', // Laranja
+            'text' => 'Atrasando'
+        ];
     } else {
-        return 'warning'; // Amarelo
+        return [
+            'color' => 'warning', // Amarelo
+            'text' => 'Atrasando'
+        ];
     }
 }
 

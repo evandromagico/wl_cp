@@ -76,13 +76,12 @@ try {
                         $progresso_montagem = calcularProgressoMontagem($projeto);
                         $progresso_total = round(($progresso_desenho + $progresso_corte + $progresso_montagem) / 3);
                         $data_entrega = formatarData($projeto['data_entrega']);
-                        $statusClass = getStatusColor($projeto['data_entrega'], $progresso_total);
-                        $statusText = calcularStatusProjeto($projeto['data_entrega']);
+                        $status = getStatusColor($projeto['data_entrega'], $progresso_total);
                         ?>
                         <tr>
                             <td><?php echo htmlspecialchars($projeto['nome']); ?></td>
                             <td><?php echo $data_entrega; ?></td>
-                            <td><?php echo "<span class='badge bg-{$statusClass}'>{$statusText}</span>"; ?></td>
+                            <td><?php echo "<span class='badge bg-{$status['color']}'>{$status['text']}</span>"; ?></td>
                             <td>
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" style="width: <?php echo $progresso_desenho; ?>%"

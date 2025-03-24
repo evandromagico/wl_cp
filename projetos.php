@@ -210,14 +210,13 @@ foreach ($projetos as $projeto) {
     error_log("Progresso Montagem: " . $progresso_montagem);
     error_log("Progresso Total: " . $progresso_total);
 
-    $statusClass = getStatusColor($projeto['data_entrega'], $progresso_total);
-    $statusText = calcularStatusProjeto($projeto['data_entrega']);
+    $status = getStatusColor($projeto['data_entrega'], $progresso_total);
 
     $content .= "
         <tr>
             <td>{$projeto['nome']}</td>
             <td>" . formatarData($projeto['data_entrega']) . "</td>
-            <td><span class='badge bg-{$statusClass}'>{$statusText}</span></td>
+            <td><span class='badge bg-{$status['color']}'>{$status['text']}</span></td>
             <td>" . (isset($projeto['desenho_torre_id']) ? array_values(array_filter($projetistas, function ($u) use ($projeto) {
         return $u['id'] == $projeto['desenho_torre_id'];
     }))[0]['nome'] : '-') . "</td>
