@@ -99,16 +99,59 @@ function getStatusColor($data_entrega, $progresso_total = 0)
         ];
     }
 
-    // Se faltam 3 dias ou menos (incluindo mesmo dia)
-    if ($progresso_total < 90) {
-        return [
-            'color' => 'orange', // Laranja
-            'text' => 'Atrasando crítico'
-        ];
+
+    if ($dias_restantes == 0) {
+        if ($progresso_total >= 95) {
+            return [
+                'color' => 'warning', // Amarelo
+                'text' => 'Atrasando'
+            ];
+        } else {
+            return [
+                'color' => 'danger', // Vermelho
+                'text' => 'Atrasado'
+            ];
+        }
+    } else if ($dias_restantes == 1) {
+        if ($progresso_total >= 93) {
+            return [
+                'color' => 'warning', // Amarelo
+                'text' => 'Atrasando'
+            ];
+        } else {
+            return [
+                'color' => 'orange', // Laranja
+                'text' => 'Atrasando crítico'
+            ];
+        }
+    } else if ($dias_restantes == 2) {
+        if ($progresso_total >= 90) {
+            return [
+                'color' => 'success', // Amarelo
+                'text' => 'Em dia'
+            ];
+        } else {
+            return [
+                'color' => 'warning', // Laranja
+                'text' => 'Atrasando'
+            ];
+        }
+    } else if ($dias_restantes >= 3) {
+        if ($progresso_total >= 89) {
+            return [
+                'color' => 'success', // Amarelo
+                'text' => 'Em dia'
+            ];
+        } else {
+            return [
+                'color' => 'warning', // Laranja
+                'text' => 'Atrasando'
+            ];
+        }
     } else {
         return [
-            'color' => 'warning', // Amarelo
-            'text' => 'Atrasando'
+            'color' => 'success', // Verde
+            'text' => 'Em dia'
         ];
     }
 }
