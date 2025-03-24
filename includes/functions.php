@@ -102,8 +102,8 @@ function getStatusColor($data_entrega, $progresso_total = 0)
     // Se faltam 3 dias ou menos (incluindo mesmo dia)
     if ($progresso_total < 90) {
         return [
-            'color' => 'warning text-dark', // Laranja
-            'text' => 'Atrasando'
+            'color' => 'orange', // Laranja
+            'text' => 'Atrasando crítico'
         ];
     } else {
         return [

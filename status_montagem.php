@@ -41,16 +41,6 @@ $stmt->execute();
 $projetos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $content = '
-<style>
-    th:nth-child(4), /* Montador Embasamento */
-    td:nth-child(4) {
-        max-width: 80px;
-        width: 80px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-</style>
 
 <div class="row">
     <div class="col-12">
@@ -69,10 +59,10 @@ $content = '
                                 <th>Projeto</th>
                                 <th>Data de Entrega</th>
                                 <th>Montador Torre</th>
-                                <th>Mont. Emb.</th>
+                                <th>Montador Embasa..</th>
                                 <th>Estrutura</th>
                                 <th>Cobertura</th>
-                                <th>Acabamentos</th>
+                                <th>Acabamento</th>
                                 <th>Internos</th>
                                 <th>Lazer</th>
                                 <th>Mobiliário</th>

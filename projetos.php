@@ -230,7 +230,15 @@ foreach ($projetos as $projeto) {
         return $u['id'] == $projeto['montagem_embasamento_id'];
     }))[0]['nome'] : '-') . "</td>
             <td>
-                <button class=\"btn btn-sm btn-primary\" onclick=\"editarProjeto(" . json_encode($projeto) . ")\">
+                <button class=\"btn btn-sm btn-primary\" onclick=\"editarProjeto({
+                    id: {$projeto['id']},
+                    nome: '{$projeto['nome']}',
+                    data_entrega: '{$projeto['data_entrega']}',
+                    desenho_torre_id: '{$projeto['desenho_torre_id']}',
+                    desenho_embasamento_id: '{$projeto['desenho_embasamento_id']}',
+                    montagem_torre_id: '{$projeto['montagem_torre_id']}',
+                    montagem_embasamento_id: '{$projeto['montagem_embasamento_id']}'
+                })\">
                     <i class=\"bi bi-pencil\"></i>
                 </button>
                 <button class=\"btn btn-sm btn-danger\" onclick=\"excluirProjeto({$projeto['id']})\">

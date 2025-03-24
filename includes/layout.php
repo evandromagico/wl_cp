@@ -16,6 +16,11 @@
         .container {
             max-width: 1200px;
         }
+
+        .bg-orange {
+            background-color: #FF8C00 !important;
+            color: white !important;
+        }
     </style>
 </head>
 
