@@ -175,12 +175,9 @@ function calcularProgressoTotal($status_desenho, $status_corte, $status_montagem
 function calcularProgressoDesenho($projeto)
 {
     $status_map = [
-        'Não Iniciado' => 0,
-        'Em Andamento' => 50,
-        'Enviado' => 100,
         'Não Enviado' => 0,
         'Em Revisão' => 60,
-
+        'Enviado' => 100
     ];
 
     $campos = ['torre_status', 'embasamento_status', 'internos_torre_status', 'internos_embasamento_status'];
@@ -190,9 +187,9 @@ function calcularProgressoDesenho($projeto)
 
     foreach ($campos as $campo) {
         if (isset($projeto[$campo])) {
-            $status = $projeto[$campo] ?? 'Não Iniciado';
-            // Se o status não existir no mapa, usa 'Não Iniciado'
-            $total += $status_map[$status] ?? $status_map['Não Iniciado'];
+            $status = $projeto[$campo] ?? 'Não Enviado';
+            // Se o status não existir no mapa, usa 'Não Enviado'
+            $total += $status_map[$status] ?? $status_map['Não Enviado'];
             $count++;
         }
     }

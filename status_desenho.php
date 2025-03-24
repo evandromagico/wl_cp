@@ -84,7 +84,6 @@ foreach ($projetos as $projeto) {
                     <option value='Não Enviado'" . ($projeto['torre_status'] == 'Não Enviado' ? ' selected' : '') . ">Não Enviado</option>
                     <option value='Enviado'" . ($projeto['torre_status'] == 'Enviado' ? ' selected' : '') . ">Enviado</option>
                     <option value='Em Revisão'" . ($projeto['torre_status'] == 'Em Revisão' ? ' selected' : '') . ">Em Revisão</option>
-                    <option value='Concluído'" . ($projeto['torre_status'] == 'Concluído' ? ' selected' : '') . ">Concluído</option>
                 </select>
             </td>
             <td>
@@ -94,7 +93,6 @@ foreach ($projetos as $projeto) {
                     <option value='Não Enviado'" . ($projeto['embasamento_status'] == 'Não Enviado' ? ' selected' : '') . ">Não Enviado</option>
                     <option value='Enviado'" . ($projeto['embasamento_status'] == 'Enviado' ? ' selected' : '') . ">Enviado</option>
                     <option value='Em Revisão'" . ($projeto['embasamento_status'] == 'Em Revisão' ? ' selected' : '') . ">Em Revisão</option>
-                    <option value='Concluído'" . ($projeto['embasamento_status'] == 'Concluído' ? ' selected' : '') . ">Concluído</option>
                 </select>
             </td>
             <td>
@@ -103,7 +101,7 @@ foreach ($projetos as $projeto) {
                         data-campo='internos_torre_status'>
                     <option value='Não Enviado'" . ($projeto['internos_torre_status'] == 'Não Enviado' ? ' selected' : '') . ">Não Enviado</option>
                     <option value='Enviado'" . ($projeto['internos_torre_status'] == 'Enviado' ? ' selected' : '') . ">Enviado</option>
-                    <option value='Concluído'" . ($projeto['internos_torre_status'] == 'Concluído' ? ' selected' : '') . ">Concluído</option>
+                    <option value='Em Revisão'" . ($projeto['internos_torre_status'] == 'Em Revisão' ? ' selected' : '') . ">Em Revisão</option>
                 </select>
             </td>
             <td>
@@ -112,7 +110,7 @@ foreach ($projetos as $projeto) {
                         data-campo='internos_embasamento_status'>
                     <option value='Não Enviado'" . ($projeto['internos_embasamento_status'] == 'Não Enviado' ? ' selected' : '') . ">Não Enviado</option>
                     <option value='Enviado'" . ($projeto['internos_embasamento_status'] == 'Enviado' ? ' selected' : '') . ">Enviado</option>
-                    <option value='Concluído'" . ($projeto['internos_embasamento_status'] == 'Concluído' ? ' selected' : '') . ">Concluído</option>
+                    <option value='Em Revisão'" . ($projeto['internos_embasamento_status'] == 'Em Revisão' ? ' selected' : '') . ">Em Revisão</option>
                 </select>
             </td>
         </tr>";
