@@ -57,10 +57,9 @@ $content = '
                             <tr>
                                 <th>Projeto</th>
                                 <th>Data de Entrega</th>
-                                <th>Status</th>
                                 <th>Desenhista Torre</th>
-                                <th>Torre</th>
                                 <th>Desenhista Embasamento</th>
+                                <th>Torre</th>
                                 <th>Embasamento</th>
                                 <th>Internos Torre</th>
                                 <th>Internos Embasamento</th>
@@ -70,14 +69,14 @@ $content = '
 
 foreach ($projetos as $projeto) {
     $status = calcularStatusProjeto($projeto['data_entrega']);
-    $statusClass = getStatusColor($status);
+    $statusClass = getStatusColor($projeto['data_entrega']);
 
     $content .= "
         <tr>
             <td>{$projeto['nome']}</td>
             <td>" . formatarData($projeto['data_entrega']) . "</td>
-            <td><span class='badge bg-{$statusClass}'>{$status}</span></td>
             <td>{$projeto['desenho_torre_nome']}</td>
+            <td>{$projeto['desenho_embasamento_nome']}</td>
             <td>
                 <select class='form-select form-select-sm status-select' 
                         data-projeto-id='{$projeto['id']}' 
@@ -88,7 +87,6 @@ foreach ($projetos as $projeto) {
                     <option value='Concluído'" . ($projeto['torre_status'] == 'Concluído' ? ' selected' : '') . ">Concluído</option>
                 </select>
             </td>
-            <td>{$projeto['desenho_embasamento_nome']}</td>
             <td>
                 <select class='form-select form-select-sm status-select' 
                         data-projeto-id='{$projeto['id']}' 

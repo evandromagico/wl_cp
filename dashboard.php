@@ -28,69 +28,6 @@ try {
     die("Erro ao buscar projetos: " . $e->getMessage());
 }
 
-// Função para calcular progresso do desenho
-function calcularProgressoDesenho($projeto)
-{
-    $status_map = [
-        'Não Iniciado' => 0,
-        'Em Andamento' => 50,
-        'Enviado' => 75,
-        'Não Enviado' => 0,
-        'Em Revisão' => 60,
-        'Concluído' => 100
-    ];
-
-    $total = 0;
-    $total += $status_map[$projeto['torre_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['embasamento_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['internos_torre_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['internos_embasamento_status'] ?? 'Não Iniciado'];
-
-    return round($total / 4);
-}
-
-// Função para calcular progresso do corte
-function calcularProgressoCorte($projeto)
-{
-    $status_map = [
-        'Não Iniciado' => 0,
-        'Em Andamento' => 50,
-        'Concluído' => 100
-    ];
-
-    $total = 0;
-    $total += $status_map[$projeto['estrutura_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['cobertura_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['acabamentos_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['internos_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['corte_embasamento_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['lazer_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['mobiliario_status'] ?? 'Não Iniciado'];
-    $total += $status_map[$projeto['arborismo_status'] ?? 'Não Iniciado'];
-
-    return round($total / 8);
-}
-
-// Função para calcular progresso da montagem
-function calcularProgressoMontagem($projeto)
-{
-    $status_map = [
-        0 => 0,    // Não Iniciado
-        1 => 50,   // Em Execução
-        2 => 100   // Concluído
-    ];
-
-    $total = 0;
-    $total += $status_map[$projeto['estrutura'] ?? 0];
-    $total += $status_map[$projeto['cobertura'] ?? 0];
-    $total += $status_map[$projeto['acabamentos'] ?? 0];
-    $total += $status_map[$projeto['internos'] ?? 0];
-    $total += $status_map[$projeto['lazer'] ?? 0];
-    $total += $status_map[$projeto['mobiliario'] ?? 0];
-    $total += $status_map[$projeto['arborismo'] ?? 0];
-
-    return round($total / 7);
-}
 ?>
 
 <!DOCTYPE html>
@@ -139,11 +76,13 @@ function calcularProgressoMontagem($projeto)
                         $progresso_montagem = calcularProgressoMontagem($projeto);
                         $progresso_total = round(($progresso_desenho + $progresso_corte + $progresso_montagem) / 3);
                         $data_entrega = formatarData($projeto['data_entrega']);
+                        $statusClass = getStatusColor($projeto['data_entrega'], $progresso_total);
+                        $statusText = calcularStatusProjeto($projeto['data_entrega']);
                         ?>
                         <tr>
                             <td><?php echo htmlspecialchars($projeto['nome']); ?></td>
                             <td><?php echo $data_entrega; ?></td>
-                            <td><?php echo htmlspecialchars($projeto['status']); ?></td>
+                            <td><?php echo "<span class='badge bg-{$statusClass}'>{$statusText}</span>"; ?></td>
                             <td>
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" style="width: <?php echo $progresso_desenho; ?>%"

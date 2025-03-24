@@ -57,7 +57,6 @@ $content = '
                             <tr>
                                 <th>Projeto</th>
                                 <th>Data de Entrega</th>
-                                <th>Status</th>
                                 <th>Montador Torre</th>
                                 <th>Montador Embasamento</th>
                                 <th>Estrutura</th>
@@ -73,13 +72,12 @@ $content = '
 
 foreach ($projetos as $projeto) {
     $status = calcularStatusProjeto($projeto['data_entrega']);
-    $statusClass = getStatusColor($status);
+    $statusClass = getStatusColor($projeto['data_entrega']);
 
     $content .= "
         <tr>
             <td>{$projeto['nome']}</td>
             <td>" . formatarData($projeto['data_entrega']) . "</td>
-            <td><span class='badge bg-{$statusClass}'>{$status}</span></td>
             <td>{$projeto['montagem_torre_nome']}</td>
             <td>{$projeto['montagem_embasamento_nome']}</td>
             <td>

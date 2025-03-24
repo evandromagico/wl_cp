@@ -16,15 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         if ($id) {
             // Atualização
-            $status = calcularStatusProjeto($data_entrega);
-            $stmt = $conn->prepare("UPDATE projetos SET nome = ?, data_entrega = ?, status = ? WHERE id = ?");
-            $stmt->execute([$nome, $data_entrega, $status, $id]);
+            $stmt = $conn->prepare("UPDATE projetos SET nome = ?, data_entrega = ? WHERE id = ?");
+            $stmt->execute([$nome, $data_entrega, $id]);
             $mensagem = "Projeto atualizado com sucesso!";
         } else {
             // Inserção
-            $status = calcularStatusProjeto($data_entrega);
-            $stmt = $conn->prepare("INSERT INTO projetos (nome, data_entrega, status) VALUES (?, ?, ?)");
-            $stmt->execute([$nome, $data_entrega, $status]);
+            $stmt = $conn->prepare("INSERT INTO projetos (nome, data_entrega) VALUES (?, ?)");
+            $stmt->execute([$nome, $data_entrega]);
             $id = $conn->lastInsertId();
             $mensagem = "Projeto cadastrado com sucesso!";
         }
@@ -74,16 +72,23 @@ $montadores = array_filter($usuarios, function ($u) {
 
 // Buscar projetos
 $stmt = $conn->prepare("
-    SELECT p.id, p.nome, p.data_entrega, p.status, p.created_at,
+    SELECT p.*, 
            dt.usuario_id as desenho_torre_id,
            de.usuario_id as desenho_embasamento_id,
            mt.usuario_id as montagem_torre_id,
-           me.usuario_id as montagem_embasamento_id
+           me.usuario_id as montagem_embasamento_id,
+           sd.torre_status, sd.embasamento_status, sd.internos_torre_status, sd.internos_embasamento_status,
+           sc.estrutura_status, sc.cobertura_status, sc.acabamentos_status, sc.internos_status, 
+           sc.embasamento_status as corte_embasamento_status, sc.lazer_status, sc.mobiliario_status, sc.arborismo_status,
+           sm.estrutura, sm.cobertura, sm.acabamentos, sm.internos, sm.lazer, sm.mobiliario, sm.arborismo
     FROM projetos p
     LEFT JOIN equipe_projeto dt ON p.id = dt.projeto_id AND dt.tipo_trabalho = 'desenho_torre'
     LEFT JOIN equipe_projeto de ON p.id = de.projeto_id AND de.tipo_trabalho = 'desenho_embasamento'
     LEFT JOIN equipe_projeto mt ON p.id = mt.projeto_id AND mt.tipo_trabalho = 'montagem_torre'
     LEFT JOIN equipe_projeto me ON p.id = me.projeto_id AND me.tipo_trabalho = 'montagem_embasamento'
+    LEFT JOIN status_desenho sd ON p.id = sd.projeto_id
+    LEFT JOIN status_corte sc ON p.id = sc.projeto_id
+    LEFT JOIN status_montagem sm ON p.id = sm.projeto_id
     ORDER BY p.data_entrega
 ");
 $stmt->execute();
@@ -193,13 +198,26 @@ $content .= '
                         <tbody>';
 
 foreach ($projetos as $projeto) {
-    $statusClass = getStatusColor($projeto['status']);
+    $progresso_desenho = calcularProgressoDesenho($projeto);
+    $progresso_corte = calcularProgressoCorte($projeto);
+    $progresso_montagem = calcularProgressoMontagem($projeto);
+    $progresso_total = round(($progresso_desenho + $progresso_corte + $progresso_montagem) / 3);
+
+    // Debug dos progressos
+    error_log("Projeto: " . $projeto['nome']);
+    error_log("Progresso Desenho: " . $progresso_desenho);
+    error_log("Progresso Corte: " . $progresso_corte);
+    error_log("Progresso Montagem: " . $progresso_montagem);
+    error_log("Progresso Total: " . $progresso_total);
+
+    $statusClass = getStatusColor($projeto['data_entrega'], $progresso_total);
+    $statusText = calcularStatusProjeto($projeto['data_entrega']);
 
     $content .= "
         <tr>
             <td>{$projeto['nome']}</td>
             <td>" . formatarData($projeto['data_entrega']) . "</td>
-            <td><span class='badge bg-{$statusClass}'>{$projeto['status']}</span></td>
+            <td><span class='badge bg-{$statusClass}'>{$statusText}</span></td>
             <td>" . (isset($projeto['desenho_torre_id']) ? array_values(array_filter($projetistas, function ($u) use ($projeto) {
         return $u['id'] == $projeto['desenho_torre_id'];
     }))[0]['nome'] : '-') . "</td>

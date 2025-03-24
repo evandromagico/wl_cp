@@ -51,7 +51,6 @@ $content = '
                             <tr>
                                 <th>Projeto</th>
                                 <th>Data de Entrega</th>
-                                <th>Status</th>
                                 <th>Estrutura</th>
                                 <th>Cobertura</th>
                                 <th>Acabamentos</th>
@@ -65,14 +64,17 @@ $content = '
                         <tbody>';
 
 foreach ($projetos as $projeto) {
+    $progresso_desenho = calcularProgressoDesenho($projeto);
+    $progresso_corte = calcularProgressoCorte($projeto);
+    $progresso_montagem = calcularProgressoMontagem($projeto);
+    $progresso_total = round(($progresso_desenho + $progresso_corte + $progresso_montagem) / 3);
     $status = calcularStatusProjeto($projeto['data_entrega']);
-    $statusClass = getStatusColor($status);
+    $statusClass = getStatusColor($projeto['data_entrega'], $progresso_total);
 
     $content .= "
         <tr>
             <td>{$projeto['nome']}</td>
             <td>" . formatarData($projeto['data_entrega']) . "</td>
-            <td><span class='badge bg-{$statusClass}'>{$status}</span></td>
             <td>
                 <select class='form-select form-select-sm status-select' 
                         data-projeto-id='{$projeto['id']}' 
