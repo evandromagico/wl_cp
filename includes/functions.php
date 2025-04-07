@@ -299,3 +299,19 @@ function calcularProgressoMontagem($projeto)
 
     return $count > 0 ? round($total / $count) : 0;
 }
+
+function getStatusText($status)
+{
+    switch ($status) {
+        case 'nao_iniciado':
+            return 'Não Iniciado';
+        case 'em_andamento':
+            return 'Em Andamento';
+        case 'concluido':
+            return 'Concluído';
+        case 'atrasado':
+            return 'Atrasado';
+        default:
+            return 'Não Definido';
+    }
+}

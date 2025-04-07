@@ -65,7 +65,7 @@ foreach ($projetos as $projeto) {
 
     $content .= "
         <tr>
-            <td>" . htmlspecialchars($projeto['nome']) . "</td>
+            <td><a href='projeto_individual.php?id={$projeto['id']}' class='text-decoration-none'>" . htmlspecialchars($projeto['nome']) . "</a></td>
             <td>{$data_entrega}</td>
             <td><span class='badge bg-{$status['color']}'>{$status['text']}</span></td>
             <td>
@@ -93,23 +93,19 @@ foreach ($projetos as $projeto) {
                 </div>
             </td>
             <td>
-                <div class='progress'>
-                    <div class='progress-bar' role='progressbar' style='width: {$progresso_total}%'
-                        aria-valuenow='{$progresso_total}' aria-valuemin='0' aria-valuemax='100'>
-                        {$progresso_total}%
+                <a href='projeto_individual.php?id={$projeto['id']}' class='text-decoration-none'>
+                    <div class='progress'>
+                        <div class='progress-bar' role='progressbar' style='width: {$progresso_total}%'
+                            aria-valuenow='{$progresso_total}' aria-valuemin='0' aria-valuemax='100'>
+                            {$progresso_total}%
+                        </div>
                     </div>
-                </div>
+                </a>
             </td>
             <td>
                 <div class='btn-group'>
-                    <a href='status_desenho.php?id={$projeto['id']}' class='btn btn-sm btn-outline-primary'>
-                        <i class='bi bi-pencil'></i> Desenho
-                    </a>
-                    <a href='status_corte.php?id={$projeto['id']}' class='btn btn-sm btn-outline-primary'>
-                        <i class='bi bi-scissors'></i> Corte
-                    </a>
-                    <a href='status_montagem.php?id={$projeto['id']}' class='btn btn-sm btn-outline-primary'>
-                        <i class='bi bi-tools'></i> Montagem
+                    <a href='projeto_individual.php?id={$projeto['id']}' class='btn btn-sm btn-outline-primary'>
+                        <i class='bi bi-pencil-square'></i> Modificar Status
                     </a>
                     " . ($usuario_tipo == 'admin' ? "
                         <button onclick='confirmarExclusao({$projeto['id']})' class='btn btn-sm btn-outline-danger'>
@@ -127,12 +123,242 @@ $content .= '
         </div>
     </div>
 
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Progresso das Maquetes</h5>
+                    <div class="row">';
+
+foreach ($projetos as $projeto) {
+    $progresso_desenho = calcularProgressoDesenho($projeto);
+    $progresso_corte = calcularProgressoCorte($projeto);
+    $progresso_montagem = calcularProgressoMontagem($projeto);
+    $progresso_total = round(($progresso_desenho + $progresso_corte + $progresso_montagem) / 3);
+
+    $content .= '
+        <div class="col-md-3 mb-4">
+            <div class="text-center">
+                <a href="projeto_individual.php?id=' . $projeto['id'] . '" class="text-decoration-none">
+                    <h6>' . htmlspecialchars($projeto['nome']) . '</h6>
+                </a>
+                <div class="circular-progress-container">
+                    <a href="projeto_individual.php?id=' . $projeto['id'] . '" class="text-decoration-none">
+                        <div class="circular-progress" id="main_progress_' . $projeto['id'] . '">
+                            <div class="progress-value">' . $progresso_total . '%</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <div class="progress-item">
+                        <a href="projeto_individual.php?id=' . $projeto['id'] . '" class="progress-link" title="Editar Desenho">
+                            <div class="small-circular-progress" id="desenho_progress_' . $projeto['id'] . '">
+                                <div class="small-progress-value">' . $progresso_desenho . '%</div>
+                            </div>
+                            <div class="progress-label">Desenho</div>
+                        </a>
+                    </div>
+                    <div class="progress-item">
+                        <a href="projeto_individual.php?id=' . $projeto['id'] . '" class="progress-link" title="Editar Corte">
+                            <div class="small-circular-progress" id="corte_progress_' . $projeto['id'] . '">
+                                <div class="small-progress-value">' . $progresso_corte . '%</div>
+                            </div>
+                            <div class="progress-label">Corte</div>
+                        </a>
+                    </div>
+                    <div class="progress-item">
+                        <a href="projeto_individual.php?id=' . $projeto['id'] . '" class="progress-link" title="Editar Montagem">
+                            <div class="small-circular-progress" id="montagem_progress_' . $projeto['id'] . '">
+                                <div class="small-progress-value">' . $progresso_montagem . '%</div>
+                            </div>
+                            <div class="progress-label">Montagem</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>';
+}
+
+$content .= '
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .circular-progress-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .circular-progress {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .progress-value {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .small-circular-progress {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        
+        .small-progress-value {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .progress-item {
+            flex: 1;
+            max-width: 80px;
+            margin: 0 5px;
+        }
+        
+        .progress-label {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        .progress-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.progress-link:hover {
+    transform: scale(1.05);
+    color: inherit;
+}
+
+.progress-link:hover .small-circular-progress {
+    box-shadow: 0 0 10px rgba(30, 136, 229, 0.5);
+}
+    </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js/dist/progressbar.min.js"></script>
     <script>
         function confirmarExclusao(id) {
             if (confirm("Tem certeza que deseja excluir este projeto?")) {
                 window.location.href = "excluir_projeto.php?id=" + id;
             }
         }
+
+        // Dados dos projetos
+        const projetos = ' . json_encode(array_map(function ($projeto) {
+    return [
+        'id' => $projeto['id'],
+        'nome' => $projeto['nome'],
+        'progresso_total' => round((calcularProgressoDesenho($projeto) + calcularProgressoCorte($projeto) + calcularProgressoMontagem($projeto)) / 3),
+        'progresso_desenho' => calcularProgressoDesenho($projeto),
+        'progresso_corte' => calcularProgressoCorte($projeto),
+        'progresso_montagem' => calcularProgressoMontagem($projeto)
+    ];
+}, $projetos)) . ';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Configuração global
+            const mainColor = "#1E88E5";
+            const desenhoColor = "#1E88E5";
+            const corteColor = "#1E88E5";
+            const montagemColor = "#1E88E5";
+            
+            projetos.forEach(projeto => {
+                // Circular progress para o progresso total
+                const mainProgress = new ProgressBar.Circle(`#main_progress_${projeto.id}`, {
+                    color: mainColor,
+                    strokeWidth: 10,
+                    trailWidth: 10,
+                    trailColor: "#F5F5F5",
+                    easing: "easeInOut",
+                    duration: 1400,
+                    text: {
+                        autoStyleContainer: false
+                    },
+                    from: { color: mainColor, width: 10 },
+                    to: { color: mainColor, width: 10 },
+                    step: function(state, circle) {
+                        circle.path.setAttribute("stroke", state.color);
+                        circle.path.setAttribute("stroke-width", state.width);
+                    }
+                });
+                mainProgress.animate(projeto.progresso_total / 100);
+                
+                // Circular progress para o desenho
+                const desenhoProgress = new ProgressBar.Circle(`#desenho_progress_${projeto.id}`, {
+                    color: desenhoColor,
+                    strokeWidth: 8,
+                    trailWidth: 8,
+                    trailColor: "#F5F5F5",
+                    easing: "easeInOut",
+                    duration: 1400,
+                    from: { color: desenhoColor, width: 8 },
+                    to: { color: desenhoColor, width: 8 },
+                    step: function(state, circle) {
+                        circle.path.setAttribute("stroke", state.color);
+                        circle.path.setAttribute("stroke-width", state.width);
+                    }
+                });
+                desenhoProgress.animate(projeto.progresso_desenho / 100);
+                
+                // Circular progress para o corte
+                const corteProgress = new ProgressBar.Circle(`#corte_progress_${projeto.id}`, {
+                    color: corteColor,
+                    strokeWidth: 8,
+                    trailWidth: 8,
+                    trailColor: "#F5F5F5",
+                    easing: "easeInOut",
+                    duration: 1400,
+                    from: { color: corteColor, width: 8 },
+                    to: { color: corteColor, width: 8 },
+                    step: function(state, circle) {
+                        circle.path.setAttribute("stroke", state.color);
+                        circle.path.setAttribute("stroke-width", state.width);
+                    }
+                });
+                corteProgress.animate(projeto.progresso_corte / 100);
+                
+                // Circular progress para a montagem
+                const montagemProgress = new ProgressBar.Circle(`#montagem_progress_${projeto.id}`, {
+                    color: montagemColor,
+                    strokeWidth: 8,
+                    trailWidth: 8,
+                    trailColor: "#F5F5F5",
+                    easing: "easeInOut",
+                    duration: 1400,
+                    from: { color: montagemColor, width: 8 },
+                    to: { color: montagemColor, width: 8 },
+                    step: function(state, circle) {
+                        circle.path.setAttribute("stroke", state.color);
+                        circle.path.setAttribute("stroke-width", state.width);
+                    }
+                });
+                montagemProgress.animate(projeto.progresso_montagem / 100);
+            });
+        });
     </script>';
 
 require_once 'includes/layout.php';

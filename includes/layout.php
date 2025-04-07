@@ -21,6 +21,23 @@
             background-color: #FF8C00 !important;
             color: white !important;
         }
+
+        .text-decoration-none:hover {
+            text-decoration: none;
+        }
+
+        .progress {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .progress:hover {
+            transform: scale(1.02);
+        }
+
+        .progress-bar {
+            transition: width 0.6s ease;
+        }
     </style>
 </head>
 
